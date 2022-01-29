@@ -1,13 +1,29 @@
 package com.news.newsapp.model;
 
-public class Article {
-    private Long id;
-    private String title;
-    private String description;
-    private String url;
-    private String urlToImage;
-    private Long user_id;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "articles")
+public class Article {
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
+    private String title;
+
+    @Column
+    private String description;
+
+    @Column
+    private String url;
+
+    @Column
+    private String urlToImage;
+
+    @Column
+    private Long user_id;
 
     public Article() {
     }
