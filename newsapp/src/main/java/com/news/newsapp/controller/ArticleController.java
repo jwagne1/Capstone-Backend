@@ -1,11 +1,13 @@
 package com.news.newsapp.controller;
 
+import com.news.newsapp.exception.InformationExistException;
 import com.news.newsapp.model.Article;
 import com.news.newsapp.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
@@ -36,7 +38,13 @@ public class ArticleController {
     //    http://localhost:9092/api/articles
     @PostMapping(path = "/articles")
     public Article createArticle(@RequestBody Article articleObject) {
-        return articleObject;
+        LOGGER.info("calling createArticle method from controller");
+        Article article = articleRepository.findByTitle(articleObject.getTitle());
+        if(article != null){
+            throw new InformationExistException("article with title " + article.getTitle() + " already exists");
+        }else {
+            return articleRepository.save(articleObject);
+        }
     }
 
     // http://localhost:9092/api/articles/1
