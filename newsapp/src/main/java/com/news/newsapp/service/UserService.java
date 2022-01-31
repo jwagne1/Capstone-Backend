@@ -5,6 +5,7 @@ import com.news.newsapp.exception.InformationExistException;
 import com.news.newsapp.model.User;
 import com.news.newsapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.logging.Logger;
@@ -15,6 +16,9 @@ public class UserService {
     private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -22,6 +26,7 @@ public class UserService {
     public User creatUser(User userObject){
         LOGGER.info("calling createUser method from service");
         if(!userRepository.existsByEmail(userObject.getEmail())){
+            userObject.setPassword(passwordEncoder.encode(userObject.getPassword()));
             return userRepository.save(userObject);
         } else {
             throw new InformationExistException("user with email " + userObject.getEmail() + " already exists");
