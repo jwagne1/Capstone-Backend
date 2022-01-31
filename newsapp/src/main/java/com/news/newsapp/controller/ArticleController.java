@@ -31,9 +31,14 @@ public class ArticleController {
 
     // http://localhost:9092/api/articles/1
     @GetMapping(path = "/articles/{articleId}")
-    public String getArticle(@PathVariable Long articleId) {
+    public Optional getArticle(@PathVariable Long articleId) {
         LOGGER.info("calling getArticle method from controller");
-        return "getting article with id of " + articleId;
+        Optional article = articleRepository.findById(articleId);
+        if (article.isPresent()) {
+            return article;
+        } else {
+            throw new InformationNotFoundException("article with id " + articleId + " not found");
+        }
     }
 
     //    http://localhost:9092/api/articles
@@ -41,18 +46,31 @@ public class ArticleController {
     public Article createArticle(@RequestBody Article articleObject) {
         LOGGER.info("calling createArticle method from controller");
         Article article = articleRepository.findByTitle(articleObject.getTitle());
-        if(article != null){
+        if (article != null) {
             throw new InformationExistException("article with title " + article.getTitle() + " already exists");
-        }else {
+        } else {
             return articleRepository.save(articleObject);
         }
     }
 
     // http://localhost:9092/api/articles/1
     @PutMapping(path = "/articles/{articleId}")
-    public String updateArticle(@PathVariable(value = "articleId") Long articleId, @RequestBody String body) {
+    public Article updateArticle(@PathVariable(value = "articleId") Long articleId, @RequestBody Article articleObject) {
         LOGGER.info("calling updateArticle method from controller");
-        return "updating articles articles with id " + articleId + body;
+        Optional<Article> article = articleRepository.findById(articleId);
+        if (article.isPresent()) {
+            if (articleObject.getTitle().equals(article.get().getTitle())) {
+                LOGGER.warning("category name is equal to database object name");
+                throw new InformationExistException("article " + article.get().getTitle() + " already exists");
+            } else {
+                Article updateArticle = articleRepository.findById(articleId).get();
+                updateArticle.setTitle(articleObject.getTitle());
+                updateArticle.setDescription(articleObject.getDescription());
+                return articleRepository.save(updateArticle);
+            }
+        } else {
+            throw new InformationNotFoundException("article with id " + articleId + " not found");
+        }
     }
 
     // http://localhost:9092/api/articles/1
@@ -60,7 +78,7 @@ public class ArticleController {
     public Optional<Article> deleteArticle(@PathVariable(value = "articleId") Long articleId) {
         LOGGER.info("calling deleteArticle method from controller");
         Optional<Article> article = articleRepository.findById(articleId);
-        if(article.isPresent()){
+        if (article.isPresent()) {
             articleRepository.deleteById(articleId);
             return article;
         } else {
