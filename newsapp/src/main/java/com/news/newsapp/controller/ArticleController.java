@@ -1,6 +1,7 @@
 package com.news.newsapp.controller;
 
 import com.news.newsapp.exception.InformationExistException;
+import com.news.newsapp.exception.InformationNotFoundException;
 import com.news.newsapp.model.Article;
 import com.news.newsapp.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
