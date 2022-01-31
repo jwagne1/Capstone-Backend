@@ -1,5 +1,7 @@
 package com.news.newsapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -22,8 +24,10 @@ public class Article {
     @Column
     private String urlToImage;
 
-    @Column
-    private Long user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 
     public Article() {
     }
@@ -34,7 +38,6 @@ public class Article {
         this.description = description;
         this.url = url;
         this.urlToImage = urlToImage;
-        this.user_id = user_id;
     }
 
     public Long getId() {
@@ -77,11 +80,11 @@ public class Article {
         this.urlToImage = urlToImage;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
