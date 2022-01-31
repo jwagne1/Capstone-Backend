@@ -23,7 +23,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User creatUser(User userObject){
+    public User createUser(User userObject){
         LOGGER.info("calling createUser method from service");
         if(!userRepository.existsByEmail(userObject.getEmail())){
             userObject.setPassword(passwordEncoder.encode(userObject.getPassword()));
