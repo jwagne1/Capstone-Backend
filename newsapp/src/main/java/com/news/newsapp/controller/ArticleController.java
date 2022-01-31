@@ -56,7 +56,14 @@ public class ArticleController {
 
     // http://localhost:9092/api/articles/1
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable(value = "articleId") Long articleId, @RequestBody String body) {
-        return "deleting the article with id of " + articleId;
+    public Optional<Article> deleteArticle(@PathVariable(value = "articleId") Long articleId) {
+        LOGGER.info("calling deleteArticle method from controller");
+        Optional<Article> article = articleRepository.findById(articleId);
+        if(article.isPresent()){
+            articleRepository.deleteById(articleId);
+            return article;
+        } else {
+            throw new InformationNotFoundException("article with id " + articleId + " not found");
+        }
     }
 }
