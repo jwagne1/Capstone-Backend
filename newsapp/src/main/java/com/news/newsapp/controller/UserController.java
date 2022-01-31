@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.logging.Logger;
 
 @RestController
@@ -16,6 +15,7 @@ public class UserController {
     private UserService userService;
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
