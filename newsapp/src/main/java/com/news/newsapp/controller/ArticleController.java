@@ -31,18 +31,17 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    //http: //localhost:9092/api/categories
+    //http: //localhost:9092/api/articles
     @GetMapping("/articles")
     public List<Article> getArticles() {
         LOGGER.info("calling getArticles method from controller");
-        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(userDetails.getUser().getId());
+
         return articleService.getArticles();
     }
 
     // http://localhost:9092/api/articles/1
     @GetMapping(path = "/articles/{articleId}")
-    public Optional getArticle(@PathVariable Long articleId) {
+    public Article getArticle(@PathVariable Long articleId) {
         LOGGER.info("calling getArticle method from controller");
         return articleService.getArticle(articleId);
     }
@@ -63,7 +62,7 @@ public class ArticleController {
 
     // http://localhost:9092/api/articles/1
     @DeleteMapping("/articles/{articleId}")
-    public Optional<Article> deleteArticle(@PathVariable(value = "articleId") Long articleId) {
+    public Article deleteArticle(@PathVariable(value = "articleId") Long articleId) {
         LOGGER.info("calling deleteArticle method from controller");
         return articleService.deleteArticle(articleId);
     }

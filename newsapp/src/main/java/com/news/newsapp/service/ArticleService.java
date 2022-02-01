@@ -5,7 +5,9 @@ import com.news.newsapp.exception.InformationExistException;
 import com.news.newsapp.exception.InformationNotFoundException;
 import com.news.newsapp.model.Article;
 import com.news.newsapp.repository.ArticleRepository;
+import com.news.newsapp.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,54 +27,69 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
+    //http: //localhost:9092/api/articles
     public List<Article> getArticles() {
         LOGGER.info("calling getArticles method from service");
-        return articleRepository.findAll();
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(userDetails.getUser().getId());
+        List<Article> articles = articleRepository.findByUserId(userDetails.getUser().getId());
+        if(articles.isEmpty()){
+            throw new InformationNotFoundException("no articles found for user id " + userDetails.getUser().getId());
+        } else {
+            return articles;
+        }
     }
 
-    public Optional getArticle(Long articleId) {
+    public Article getArticle(Long articleId) {
         LOGGER.info("calling getArticle method from service");
-        Optional article = articleRepository.findById(articleId);
-        if (article.isPresent()) {
-            return article;
-        } else {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Article article = articleRepository.findByIdAndUserId(articleId, userDetails.getUser().getId());
+        if (article == null) {
             throw new InformationNotFoundException("article with id " + articleId + " not found");
+        } else {
+            return article;
         }
     }
 
     public Article createArticle(Article articleObject) {
         LOGGER.info("calling createArticle method from service");
-        Article article = articleRepository.findByTitle(articleObject.getTitle());
-        if (article != null) {
-            throw new InformationExistException("article with title " + article.getTitle() + " already exists");
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Article article = articleRepository.findByUserIdAndTitle(userDetails.getUser().getId(), articleObject.getTitle());
+        if(article!=null){
+            throw new InformationExistException("article with name " + article.getTitle() + " already exists");
         } else {
+            articleObject.setUser(userDetails.getUser());
             return articleRepository.save(articleObject);
         }
     }
 
     public Article updateArticle(Long articleId, Article articleObject) {
         LOGGER.info("calling updateArticle method from service");
-        Optional<Article> article = articleRepository.findById(articleId);
-        if (article.isPresent()) {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(userDetails.getUser().getId());
+        Article article = articleRepository.findByIdAndUserId(articleId, userDetails.getUser().getId());
+        if (article == null) {
+            throw new InformationNotFoundException("article with id " + articleId + " not found");
+        } else {
             Article updateArticle = articleRepository.findById(articleId).get();
             updateArticle.setTitle(articleObject.getTitle());
             updateArticle.setDescription(articleObject.getDescription());
             updateArticle.setUrl(articleObject.getUrl());
             updateArticle.setUrlToImage(articleObject.getUrlToImage());
             return articleRepository.save(updateArticle);
-        } else {
-            throw new InformationNotFoundException("article with id " + articleId + " not found");
         }
     }
 
-    public Optional<Article> deleteArticle(Long articleId) {
+    public Article deleteArticle(Long articleId) {
         LOGGER.info("calling deleteArticle method from service");
-        Optional<Article> article = articleRepository.findById(articleId);
-        if (article.isPresent()) {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(userDetails.getUser().getId());
+        Article article = articleRepository.findByIdAndUserId(articleId, userDetails.getUser().getId());
+        if (article == null) {
+            throw new InformationNotFoundException("article with id " + articleId + " not found");
+        } else {
             articleRepository.deleteById(articleId);
             return article;
-        } else {
-            throw new InformationNotFoundException("article with id " + articleId + " not found");
         }
     }
 }
