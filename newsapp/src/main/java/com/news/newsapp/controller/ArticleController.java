@@ -4,8 +4,10 @@ import com.news.newsapp.exception.InformationExistException;
 import com.news.newsapp.exception.InformationNotFoundException;
 import com.news.newsapp.model.Article;
 import com.news.newsapp.repository.ArticleRepository;
+import com.news.newsapp.security.MyUserDetails;
 import com.news.newsapp.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,9 +31,12 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
+    //http: //localhost:9092/api/categories
     @GetMapping("/articles")
     public List<Article> getArticles() {
         LOGGER.info("calling getArticles method from controller");
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(userDetails.getUser().getId());
         return articleService.getArticles();
     }
 

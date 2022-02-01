@@ -1,4 +1,4 @@
-package com.news.newsapp.model.request;
+package com.news.newsapp.model.Request;
 
 public class LoginRequest {
     private String email;
