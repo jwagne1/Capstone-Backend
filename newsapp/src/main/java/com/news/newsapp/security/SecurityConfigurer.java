@@ -21,6 +21,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     private MyUserDetailsService myUserDetailsService;
 
+
     @Autowired
     public void setMyUserDetailsService(MyUserDetailsService myUserDetailsService) {
         this.myUserDetailsService = myUserDetailsService;
@@ -37,12 +38,14 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers(
-                        "/auth/users", "/auth/users/login", "/auth/users/register").permitAll()
+                        "/auth/users", "/auth/users/login", "/auth/users/register", "/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.cors().disable();
+
     }
 
     @Override

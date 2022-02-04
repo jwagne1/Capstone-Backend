@@ -22,10 +22,7 @@ public class ArticleController {
     private ArticleService articleService;
     private static final Logger LOGGER = Logger.getLogger(ArticleController.class.getName());
 
-//    @Autowired
-//    public void setArticleRepository(ArticleRepository articleRepository) {
-//        this.articleRepository = articleRepository;
-//    }
+
     @Autowired
     public void setArticleService(ArticleService articleService){
         this.articleService = articleService;

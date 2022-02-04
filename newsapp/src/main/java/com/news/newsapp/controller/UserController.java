@@ -27,6 +27,7 @@ public class UserController {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
     //    http://localhost:9092/auth/users
     @PostMapping("/register")
     public User createUser(@RequestBody User userObject) {
