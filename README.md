@@ -1,8 +1,9 @@
-# Capstone Project - News To Me App
+# Capstone Project - News To Me App - Backend section
 ### Description
 The News to Me! project is news articles aggregator used to put in practice all the applicable methods and tools the SEI student has learned during the General Assembly SEI Bootcamp, including HTML, CSS, JavaScript, Java, PostGreSQL, Angular and Springboot .
 The goal of the application is to create a News aggregator that helps a user see the latest headlines in the USA, register and be able to save articles for future reference.
 
+<img width="1187" alt="NewsToMe-App" src="https://user-images.githubusercontent.com/94083595/152597924-6881d30a-9e68-4e9a-827b-c3234ab81ccc.png">
 
 
 ### Getting started
@@ -38,6 +39,10 @@ Recommended browsers include:
     * Created a new Github project to keep track of deliverables.
     * Wrote down basic pseudocode for the different functions I felt were required to complete app.
     * Created ERD for the relationships in the backend app.
+
+![News to Me App - Database ER diagram v2](https://user-images.githubusercontent.com/94083595/152598000-b49b8868-ae41-47c8-b9ad-7590d8fbcb54.png)
+
+
 2. Development - Started the process by creating a new Angular project for the frontend and a Springboot project for the backend. Once those initial projects were created, the following steps were implemented:
     * Started going over the different lesson videos that were applicable.
     * Identified NewsAPI as the source of the news feed.
