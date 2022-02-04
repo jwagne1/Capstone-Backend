@@ -58,5 +58,6 @@ Recommended browsers include:
 
 ### Improvements for future iterations
 * Enable the functionality to add articles from Angular frontend by using the save button.
+* Deploy to Heroku.
 * Add weather information from weather API
 * Add ability to get Global news and/or customize news feed to local news by zipcode.
